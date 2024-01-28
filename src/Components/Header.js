@@ -1,17 +1,22 @@
-import * as React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
-import Link from "@mui/material/Link";
+import { Link } from "react-router-dom";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-
+import { DarkThemeContext } from "../App";
 function Header(props) {
-  const { sections, title, darkMode, toggleDarkMode } = props;
-
+  const sections = [
+    { title: "Home", url: "/home" },
+    { title: "Blogs", url: "/blog" },
+    { title: "About", url: "/about" },
+  ];
+  const { title } = props;
+  const { theme, toggleTheme } = useContext(DarkThemeContext);
   return (
     <React.Fragment>
       <Toolbar sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -26,8 +31,8 @@ function Header(props) {
         >
           {title}
         </Typography>
-        <IconButton onClick={() => toggleDarkMode()}>
-          {darkMode.darkMode ? <Brightness4Icon /> : <Brightness7Icon />}
+        <IconButton onClick={() => toggleTheme()}>
+          {theme === "light" ? <Brightness4Icon /> : <Brightness7Icon />}
         </IconButton>
         <IconButton>
           <SearchIcon />
@@ -40,11 +45,9 @@ function Header(props) {
       >
         {sections.map((section) => (
           <Link
-            color="inherit"
             noWrap
             key={section.title}
-            variant="body2"
-            href={section.url}
+            to={section.url}
             sx={{ p: 1, flexShrink: 0 }}
           >
             {section.title}

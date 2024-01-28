@@ -4,7 +4,12 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
 
+import GitHubIcon from "@mui/icons-material/GitHub";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import XIcon from "@mui/icons-material/X";
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -19,22 +24,32 @@ function Copyright() {
 }
 
 function Footer(props) {
-  const { description, title } = props;
-
+  const social = [
+    { name: "GitHub", icon: GitHubIcon },
+    { name: "X", icon: XIcon },
+    { name: "Youtube", icon: YouTubeIcon },
+    { name: "instagram", icon: InstagramIcon },
+  ];
   return (
     <Box component="footer" sx={{ bgcolor: "background.paper", py: 6 }}>
       <Container maxWidth="lg">
-        <Typography variant="h6" align="center" gutterBottom>
-          {title}
+        <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+          Socials
         </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          {description}
-        </Typography>
+        {social.map((network) => (
+          <Link
+            display="block"
+            variant="body1"
+            href="#"
+            key={network.name}
+            sx={{ mb: 0.5 }}
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              <network.icon />
+              <span>{network.name}</span>
+            </Stack>
+          </Link>
+        ))}
         <Copyright />
       </Container>
     </Box>
