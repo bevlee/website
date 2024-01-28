@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/%3Chttps://bevlee.github.io/website%3E/static/css/main.f855e6bc.css",
+    "main.js": "/%3Chttps://bevlee.github.io/website%3E/static/js/main.0ecfd20e.js",
+    "static/js/787.774594b4.chunk.js": "/%3Chttps://bevlee.github.io/website%3E/static/js/787.774594b4.chunk.js",
+    "static/media/Running_10km.md": "/%3Chttps://bevlee.github.io/website%3E/static/media/Running_10km.fa5bf98a9675113edd51.md",
+    "index.html": "/%3Chttps://bevlee.github.io/website%3E/index.html",
+    "static/media/The_Beginning.md": "/%3Chttps://bevlee.github.io/website%3E/static/media/The_Beginning.e86a728ea0be4055fe6c.md",
+    "main.f855e6bc.css.map": "/%3Chttps://bevlee.github.io/website%3E/static/css/main.f855e6bc.css.map",
+    "main.0ecfd20e.js.map": "/%3Chttps://bevlee.github.io/website%3E/static/js/main.0ecfd20e.js.map",
+    "787.774594b4.chunk.js.map": "/%3Chttps://bevlee.github.io/website%3E/static/js/787.774594b4.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.0ecfd20e.js"
+  ]
+}
