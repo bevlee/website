@@ -8,7 +8,7 @@ import Blog from "./routes/Blog";
 import ErrorPage from "./routes/ErrorPage";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 export const DarkThemeContext = createContext();
 
 export const DarkThemeProvider = ({ children, value }) => {
@@ -22,7 +22,7 @@ export const DarkThemeProvider = ({ children, value }) => {
 export const useTheme = () => {
   return useContext(DarkThemeContext);
 };
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <Home />,
