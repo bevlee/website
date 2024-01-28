@@ -10,7 +10,7 @@ export default function About() {
     <>
       <Container maxWidth="lg">
         <Header title="Bevsoft" />
-        <Paper elevation={0} sx={{ p: 2, bgcolor: "grey.200" }}>
+        <Paper elevation={0} sx={{ p: 2, bgcolor: "grey.600" }}>
           <Typography variant="h6" gutterBottom>
             {"ABOUT ME"}
           </Typography>
