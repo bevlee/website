@@ -67,82 +67,67 @@ def create_blog_template(content, title, back_link="../index.html"):
         back_link=back_link
     )
 
-def convert_markdown_to_html(blog_structure):
+def process_single_blog_file(year, md_file, year_dir):
     """
-    Convert markdown files to HTML using pandoc and templates
+    Process a single blog file: convert markdown to HTML and extract metadata
+    Returns: dict with blog post data or None if error
     """
+    md_path = f"blogs/{year}/{md_file}"
+    html_filename = md_file.replace('.md', '.html')
+    
+    try:
+        # Convert markdown to HTML using pandoc
+        result = subprocess.run([
+            'pandoc', md_path, '--to=html'
+        ], capture_output=True, text=True, check=True)
+        
+        content = result.stdout
+        
+        # Extract title using BeautifulSoup
+        title = extract_title_from_html(content)
+        
+        # Create full HTML with template
+        full_html = create_blog_template(content, title, "../../index.html")
+        
+        # Write to HTML file
+        html_path = year_dir / html_filename
+        html_path.write_text(full_html)
+        
+        print(f"Processed: {md_path} -> {html_path}")
+        
+        # Return blog post metadata
+        return {
+            'filename': html_filename,
+            'title': title,
+            'year': year,
+            'path': f"html/{year}/{html_filename}"
+        }
+        
+    except subprocess.CalledProcessError as e:
+        print(f"Error converting {md_path}: {e}")
+        sys.exit(1)
+    except FileNotFoundError:
+        print("Error: pandoc not found. Please install pandoc.")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error processing {md_path}: {e}")
+        return None
+
+def process_blog_files(blog_structure):
+    """
+    Process all blog files in one pass: convert and extract metadata
+    Returns: list of blog post data
+    """
+    blog_posts = []
+    
     for year, md_files in blog_structure.items():
         year_dir = Path(f"html/{year}")
         year_dir.mkdir(parents=True, exist_ok=True)
         
         for md_file in md_files:
-            md_path = f"blogs/{year}/{md_file}"
-            html_filename = md_file.replace('.md', '.html')
-            
-            # Use pandoc to convert markdown to HTML body content only
-            try:
-                result = subprocess.run([
-                    'pandoc', md_path, '--to=html'
-                ], capture_output=True, text=True, check=True)
-                
-                content = result.stdout
-                
-                # Extract title using BeautifulSoup
-                title = extract_title_from_html(content)
-                
-                # Create full HTML with template
-                full_html = create_blog_template(content, title, "../../index.html")
-                
-                # Write to HTML file
-                html_path = year_dir / html_filename
-                html_path.write_text(full_html)
-                
-                print(f"Converted: {md_path} -> {html_path}")
-                
-            except subprocess.CalledProcessError as e:
-                print(f"Error converting {md_path}: {e}")
-                sys.exit(1)
-            except FileNotFoundError:
-                print("Error: pandoc not found. Please install pandoc.")
-                sys.exit(1)
-
-def extract_metadata_from_html(blog_structure):
-    """
-    Extract metadata from generated HTML files
-    Returns: list of dicts with filename, title, year
-    """
-    blog_posts = []
-    
-    for year, md_files in blog_structure.items():
-        for md_file in md_files:
-            html_filename = md_file.replace('.md', '.html')
-            html_path = Path(f"html/{year}/{html_filename}")
-            
-            if not html_path.exists():
-                print(f"Warning: {html_path} not found, skipping...")
-                continue
-            
-            try:
-                # Read and parse HTML
-                html_content = html_path.read_text()
-                soup = BeautifulSoup(html_content, 'html.parser')
-                
-                # Extract title from first h2 tag
-                h2_tag = soup.find('h2')
-                title = h2_tag.get_text() if h2_tag else "Untitled"
-                
-                blog_posts.append({
-                    'filename': html_filename,
-                    'title': title,
-                    'year': year,
-                    'path': f"html/{year}/{html_filename}"
-                })
-                
-                print(f"Extracted metadata: {title} ({year})")
-                
-            except Exception as e:
-                print(f"Error reading {html_path}: {e}")
-                continue
+            post_data = process_single_blog_file(year, md_file, year_dir)
+            if post_data:
+                blog_posts.append(post_data)
     
     return blog_posts
 
@@ -213,13 +198,10 @@ def main():
     total_posts = sum(len(files) for files in blog_structure.values())
     print(f"Total posts: {total_posts}")
     
-    print("\nConverting markdown to HTML...")
-    convert_markdown_to_html(blog_structure)
+    print("\nProcessing blog files...")
+    blog_posts = process_blog_files(blog_structure)
     
-    print("\nExtracting metadata from HTML files...")
-    blog_posts = extract_metadata_from_html(blog_structure)
-    
-    print(f"\nExtracted metadata for {len(blog_posts)} posts:")
+    print(f"\nProcessed {len(blog_posts)} posts:")
     for post in blog_posts:
         print(f"  - {post['title']} ({post['year']})")
     
