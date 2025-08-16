@@ -37,9 +37,9 @@ def scan_blogs_directory():
     
     return blog_structure
 
-def load_template():
+def load_blogpost_template():
     """
-    Load HTML template from file
+    Load blogpost HTML template from file
     """
     template_path = Path("blog_template.html")
     if not template_path.exists():
@@ -50,9 +50,9 @@ def load_template():
 
 def create_blog_template(content, title, back_link="../index.html"):
     """
-    Create HTML using template file
+    Create HTML using blogpost template file
     """
-    template = load_template()
+    template = load_blogpost_template()
     return template.format(
         title=title,
         content=content,
@@ -147,6 +147,53 @@ def extract_metadata_from_html(blog_structure):
     
     return blog_posts
 
+def load_index_template():
+    """
+    Load index HTML template from file
+    """
+    template_path = Path("index_template.html")
+    if not template_path.exists():
+        print("Error: index_template.html not found")
+        sys.exit(1)
+    
+    return template_path.read_text()
+
+def generate_index_html(blog_posts):
+    """
+    Generate index.html file with posts grouped by year
+    """
+    # Group posts by year
+    posts_by_year = {}
+    for post in blog_posts:
+        year = post['year']
+        if year not in posts_by_year:
+            posts_by_year[year] = []
+        posts_by_year[year].append(post)
+    
+    # Build content section
+    content = ""
+    
+    # Sort years descending (newest first)
+    for year in sorted(posts_by_year.keys(), reverse=True):
+        content += f'    <h2>{year}</h2>\n'
+        content += '    <ul>\n'
+        
+        # Sort posts within year (can add date sorting later)
+        for post in posts_by_year[year]:
+            content += f'        <li><a href="{post["path"]}">{post["title"]}</a></li>\n'
+        
+        content += '    </ul>\n\n'
+    
+    # Load template and fill in content
+    template = load_index_template()
+    html_content = template.format(content=content)
+    
+    # Write to index.html
+    index_path = Path("index.html")
+    index_path.write_text(html_content)
+    
+    print(f"Generated index.html with {len(blog_posts)} posts")
+
 def main():
     """Main function to scan and convert blog posts"""
     print("Scanning blogs/ directory...")
@@ -177,7 +224,10 @@ def main():
     for post in blog_posts:
         print(f"  - {post['title']} ({post['year']})")
     
-    print("\n✅ Conversion completed successfully!")
+    print("\nGenerating index.html...")
+    generate_index_html(blog_posts)
+    
+    print("\n✅ Blog generation completed successfully!")
     sys.exit(0)
 
 if __name__ == "__main__":
