@@ -48,6 +48,14 @@ def load_blogpost_template():
     
     return template_path.read_text()
 
+def extract_title_from_html(html_content):
+    """
+    Extract title from HTML content using BeautifulSoup
+    """
+    soup = BeautifulSoup(html_content, 'html.parser')
+    h2_tag = soup.find('h2')
+    return h2_tag.get_text().strip() if h2_tag else "Untitled"
+
 def create_blog_template(content, title, back_link="../index.html"):
     """
     Create HTML using blogpost template file
@@ -79,17 +87,8 @@ def convert_markdown_to_html(blog_structure):
                 
                 content = result.stdout
                 
-                # Extract title from first h2 tag (simple approach)
-                title = "Blog Post"
-                if "<h2" in content:
-                    start = content.find("<h2")
-                    if start != -1:
-                        end = content.find("</h2>", start)
-                        if end != -1:
-                            title_tag = content[start:end+5]
-                            # Extract text between tags
-                            title_start = title_tag.find(">") + 1
-                            title = title_tag[title_start:title_tag.rfind("<")]
+                # Extract title using BeautifulSoup
+                title = extract_title_from_html(content)
                 
                 # Create full HTML with template
                 full_html = create_blog_template(content, title, "../../index.html")
