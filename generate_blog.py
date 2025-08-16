@@ -162,7 +162,7 @@ def generate_index_html(blog_posts):
         content += f'    <h2>{year}</h2>\n'
         content += '    <ul>\n'
         
-        # Sort posts within year (can add date sorting later)
+        # Sort posts within year
         for post in posts_by_year[year]:
             content += f'        <li><a href="{post["path"]}">{post["title"]}</a></li>\n'
         
