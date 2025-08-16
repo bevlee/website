@@ -1,4 +1,4 @@
-_Published on January 27 2024 by Bevan_
+_Published on January 27 2024_
 
 ## Running 10km
 
