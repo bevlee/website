@@ -7,6 +7,7 @@ import os
 import sys
 import subprocess
 from pathlib import Path
+from bs4 import BeautifulSoup
 
 def scan_blogs_directory():
     """
@@ -106,6 +107,46 @@ def convert_markdown_to_html(blog_structure):
                 print("Error: pandoc not found. Please install pandoc.")
                 sys.exit(1)
 
+def extract_metadata_from_html(blog_structure):
+    """
+    Extract metadata from generated HTML files
+    Returns: list of dicts with filename, title, year
+    """
+    blog_posts = []
+    
+    for year, md_files in blog_structure.items():
+        for md_file in md_files:
+            html_filename = md_file.replace('.md', '.html')
+            html_path = Path(f"html/{year}/{html_filename}")
+            
+            if not html_path.exists():
+                print(f"Warning: {html_path} not found, skipping...")
+                continue
+            
+            try:
+                # Read and parse HTML
+                html_content = html_path.read_text()
+                soup = BeautifulSoup(html_content, 'html.parser')
+                
+                # Extract title from first h2 tag
+                h2_tag = soup.find('h2')
+                title = h2_tag.get_text() if h2_tag else "Untitled"
+                
+                blog_posts.append({
+                    'filename': html_filename,
+                    'title': title,
+                    'year': year,
+                    'path': f"html/{year}/{html_filename}"
+                })
+                
+                print(f"Extracted metadata: {title} ({year})")
+                
+            except Exception as e:
+                print(f"Error reading {html_path}: {e}")
+                continue
+    
+    return blog_posts
+
 def main():
     """Main function to scan and convert blog posts"""
     print("Scanning blogs/ directory...")
@@ -128,6 +169,13 @@ def main():
     
     print("\nConverting markdown to HTML...")
     convert_markdown_to_html(blog_structure)
+    
+    print("\nExtracting metadata from HTML files...")
+    blog_posts = extract_metadata_from_html(blog_structure)
+    
+    print(f"\nExtracted metadata for {len(blog_posts)} posts:")
+    for post in blog_posts:
+        print(f"  - {post['title']} ({post['year']})")
     
     print("\n✅ Conversion completed successfully!")
     sys.exit(0)
