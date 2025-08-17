@@ -1,0 +1,11 @@
+[project]
+name = "website"
+version = "0.1.0"
+description = "Blog generation script for Bevan's website"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+]
+
+[project.scripts]
+generate-blog = "generate_blog:main"
