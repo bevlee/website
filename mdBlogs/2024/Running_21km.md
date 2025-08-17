@@ -1,7 +1,7 @@
 _Published on January 31 2024_
 _Updated on August 17 2025_
 
-### How do I get started?
+### Running 21km
 
 The key is to have a specific goal and then break it down into MANAGEBLE steps.
 
