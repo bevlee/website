@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Blog generation script - Step 1: Scan blogs/ directory
+Blog generation script - Converts markdown files from mdBlogs/ to HTML in blogs/
 """
 
 import os
@@ -11,13 +11,13 @@ from bs4 import BeautifulSoup
 
 def scan_blogs_directory():
     """
-    Scan the blogs/ directory and find all year directories and markdown files.
+    Scan the mdBlogs/ directory and find all year directories and markdown files.
     Returns a dictionary with year -> list of markdown files structure.
     """
-    blogs_dir = Path("blogs")
+    blogs_dir = Path("mdBlogs")
     
     if not blogs_dir.exists():
-        print("Error: blogs/ directory not found")
+        print("Error: mdBlogs/ directory not found")
         sys.exit(1)
     
     blog_structure = {}
@@ -72,7 +72,7 @@ def process_single_blog_file(year, md_file, year_dir):
     Process a single blog file: convert markdown to HTML and extract metadata
     Returns: dict with blog post data or None if error
     """
-    md_path = f"blogs/{year}/{md_file}"
+    md_path = f"mdBlogs/{year}/{md_file}"
     html_filename = md_file.replace('.md', '.html')
     
     try:
@@ -100,7 +100,7 @@ def process_single_blog_file(year, md_file, year_dir):
             'filename': html_filename,
             'title': title,
             'year': year,
-            'path': f"html/{year}/{html_filename}"
+            'path': f"blogs/{year}/{html_filename}"
         }
         
     except subprocess.CalledProcessError as e:
@@ -121,7 +121,7 @@ def process_blog_files(blog_structure):
     blog_posts = []
     
     for year, md_files in blog_structure.items():
-        year_dir = Path(f"html/{year}")
+        year_dir = Path(f"blogs/{year}")
         year_dir.mkdir(parents=True, exist_ok=True)
         
         for md_file in md_files:
@@ -180,7 +180,7 @@ def generate_index_html(blog_posts):
 
 def main():
     """Main function to scan and convert blog posts"""
-    print("Scanning blogs/ directory...")
+    print("Scanning mdBlogs/ directory...")
     
     blog_structure = scan_blogs_directory()
     

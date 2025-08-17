@@ -4,7 +4,7 @@ A simple static blog generator built with Python and pandoc.
 
 ## How it Works
 
-This website is a **static site generator** that converts markdown blog posts into HTML pages with a simple, clean design.
+This website is a **static site generator** that converts markdown blog posts into HTML pages.
 
 ### Directory Structure
 
@@ -48,11 +48,8 @@ python generate_blog.py
 
 - **`blog_template.html`**: Template for individual blog posts
   - Includes "← Back to Blog" navigation
-  - Clean typography and minimal styling
-  
 - **`index_template.html`**: Template for the main blog index
   - Lists all posts grouped by year
-  - Same consistent styling
 
 ### Dependencies
 
@@ -72,6 +69,9 @@ uv sync
 
 # 3. Install pandoc (macOS)
 brew install pandoc
+# or Ubuntu
+wget https://github.com/jgm/pandoc/releases/download/3.7.0.2/pandoc-3.7.0.2-1-amd64.deb
+sudo dpkg -i pandoc-3.7.0.2-1-amd64.deb
 
 # 4. Generate the blog
 uv run python generate_blog.py
@@ -80,7 +80,6 @@ uv run python generate_blog.py
 ### Features
 
 - ✅ **Simple**: Just markdown files in year folders
-- ✅ **Fast**: Single-pass processing
 - ✅ **Clean**: Minimal HTML/CSS, no JavaScript
 - ✅ **Organized**: Automatic chronological grouping
 - ✅ **Templates**: Easy to modify styling
